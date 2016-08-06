@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE web-app
+  PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+  "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+
+	<servlet>
+		<servlet-name>pagedlist</servlet-name>
+		<servlet-class>com.interface21.web.servlet.DispatcherServlet</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>  
+  
+	<servlet-mapping>
+		<servlet-name>pagedlist</servlet-name>
+		<url-pattern>*.html</url-pattern>
+	</servlet-mapping>
+  
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+
+  <taglib>
+    <taglib-uri>/i21</taglib-uri>
+    <taglib-location>/WEB-INF/i21.tld</taglib-location>
+  </taglib>
+
+</web-app>

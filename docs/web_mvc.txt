@@ -1,0 +1,61 @@
+WEB MVC WITH THE SPRING FRAMEWORK
+
+Juergen Hoeller
+June 2003
+
+
+1. INTRODUCTION: SPRING THE APPLICATION FRAMEWORK
+
+When first confronted with the Spring Framework, one might be tempted to think: "Oh no, not yet another web framework". This essay will outline why Spring isn't particularly a web framework but a generic lightweight application framework with dedicated web support, and show the architectural differences to Struts and WebWork.
+
+In contrast to Struts or WebWork, Spring is an application framework for all layers: It offers a bean configuration foundation, AOP support, a JDBC abstraction framework, abstract transaction support, etc. It is a very non-intrusive effort: Your application classes do not need to depend on any Spring classes if not necessary, and you can reuse every part on its own if you like to. From its very design, the framework encourages clean separation of tiers, most importantly web tier and business logic: e.g. the validation framework does not depend on web controllers. Major goals are reusability and testability: Unnecessary container or framework dependencies can be considered avoidable evils.
+
+Of course, Spring's own web support is nicely integrated with the framework's general patterns. Nevertheless, replacing the web solution with Struts, WebWork, or the like is easy. Both with Spring's web support or a different one, Spring allows for building a true dedicated middle tier in the web container, with the option to reuse exactly the same business logic in test environments or standalone applications. And within J2EE, your business logic will not unnecessarily depend on container services like JTA or EJB - allowing complex, well-architected web applications to run in a "simple" container like Tomcat or Resin.
+
+Note that Spring doesn't generally aim to compete with existing solutions. It rather fosters seamless integration with standards like Servlet, JSP, JTA, JNDI, JDBC, and JDO, and well-suited tools like Hibernate, Velocity, Log4J, and Caucho's Hessian/Burlap. The framework is designed to grow with the needs of your applications, in terms of technology choice: For example, you will probably use JTA via Spring's JtaTransactionManager if you need distributed transactions - but only then, there are perfect replacements for single databases, like DataSourceTransactionManager or HibernateTransactionManager.
+
+
+2. WEB MVC: THE DESIGN OF SPRING'S WEB FRAMEWORK
+
+Spring's web framework is designed around a DispatcherServlet that dispatches requests to handlers, with configurable handler mappings, view resolution, and locale and theme resolution. The default handler is a very simple Controller interface, just offering a "ModelAndView handleRequest(request,response)" method. This can already be used for application controllers, but you will prefer the included implementation hierarchy, consisting of AbstractController, AbstractCommandController, MultiActionController, SimpleFormController, AbstractWizardFormController. Application controllers will typically be subclasses of those. Note that you can choose an appropriate base class: If you don't have a form, you don't need a FormController. This is a major difference to Struts. 
+
+You can take any object as command or form object: There's no need to implement an interface or derive from a base class. Spring's data binding is highly flexible, e.g. it treats type mismatches as validation errors that can be evaluated by the application, not as system errors. So you don't need to duplicate your business objects' properties as Strings in your form objects, just to be able to handle invalid submissions, or to convert the Strings properly. Instead, it's often preferable to bind directly to your business objects. This is another major difference to Struts which is built around required base classes like Action and ActionForm - for every type of action. 
+
+Compared to WebWork, Spring has more differentiated object roles: It supports the notion of a Controller, an optional command or form object, and a model (normally including the command or form object) that gets passed to the view. Instead, a WebWork Action combines all those roles into one single object. In Spring, command and form objects can be either existing business objects or specialized UI ones. But WebWork requires you do duplicate your business objects' properties in the Action object in any case, mix validation logic right into it, and use the same multi-role object for evaluation and form population in the view. These are arguably too many roles in one object. 
+
+Regarding views: Spring's view resolution is extremely flexible. A Controller implementation can even write a view directly to the response, returning null as ModelAndView. In the normal case, a ModelAndView instance consists of a view name and a model Map, containing bean names and corresponding objects (like a command or form, reference data, etc). View name resolution is highly configurable, either via bean names, via a properties file, or via your own ViewResolver implementation. The abstract model Map allows for complete abstraction of the view technology, without any hassle: Be it JSP, Velocity, or anything else - every renderer can be integrated directly. The model Map simply gets transformed into an appropriate format, like JSP request attributes or a Velocity template model. 
+
+
+3. INTEGRATION: USING A DIFFERENT WEB FRAMEWORK WITH SPRING
+
+Many teams will try to leverage their investments in terms of know-how and tools, both for existing projects and for new ones. Concretely, there are not only a large number of books and tools for Struts but also a lot of developers that have experience with it. Thus, if you can live with Struts' architectural flaws, it can still be a viable choice for the web layer. The same applies to WebWork and other web frameworks.
+
+So if you don't want to use Spring's web MVC but intend to leverage other solutions that Spring offers, you can integrate the web framework of your choice with Spring easily. Simply start up a Spring root application context via its ContextLoaderListener, and access it via its ServletContext attribute (or Spring's respective helper method) from within a Struts or WebWork action. Note that there aren't any "plugins" involved, therefore no dedicated integration: From the view of the web layer, you'll simply use Spring as a library, with the root application context instance as entry point.
+
+All your registered beans and all of Spring's services can be at your fingertips even without Spring's web MVC. Spring doesn't compete with Struts or WebWork in this usage, it just addresses the many areas that the pure web frameworks don't, from bean configuration to data access and transaction handling. Even if you just want to use the data access and transaction abstraction with JDBC or Hibernate, you'll be able to enrich your application with Spring solutions.
+
+
+4. FEATURE CHECK LIST
+
+If just focussing on the web support, some of Spring's unique features are:
+ 
+- clear separation of roles: controller vs validator vs command object vs form object vs model object, DispatcherServlet vs handler mapping vs view resolver, etc;
+ 
+- powerful and straightforward configuration of both framework and application classes as JavaBeans, including easy in-between referencing via an application context, e.g. from web controllers to business objects and validators;
+ 
+- adaptability, non-intrusiveness: use whatever Controller subclass you need (plain, command, form, wizard, multi action, or a custom one) for a given scenario instead of deriving from Action/ActionForm for everything;
+ 
+- reusable business code, no need for duplication: you can use existing business objects as command or form objects instead of mirroring them in special ActionForm subclasses;
+ 
+- customizable binding and validation: type mismatches as application-level validation errors that keep the offending value, localized date and number binding, etc instead of String-only form objects with manual parsing and conversion to business objects;
+ 
+- customizable handler mapping, customizable view resolution: flexible model transfer via name/value Map, handler mapping and view resolution strategies from simple to sophisticated instead of one single way;
+ 
+- customizable locale and theme resolution, support for JSPs with and without Spring tag library, support for JSTL, support for Velocity without the need for extra bridges, etc;
+
+- simple but powerful tag library that avoids HTML generation at any cost, allowing for maximum flexibility in terms of markup code.
+
+
+Resources:
+http://www.springframework.org
+http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/springframework/main/src/com/interface21/web/servlet

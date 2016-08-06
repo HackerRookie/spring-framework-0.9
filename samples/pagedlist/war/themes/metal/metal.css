@@ -1,0 +1,15 @@
+body {font-family: Verdana, Helvetica, Arial, sans-serif;background-color: #dfdfdf;}
+img {border: none;}
+ul {display: block;}
+li {display: list-item;padding: 2px;text-decoration: none;list-style-type: none;}
+li a:hover{border: 3px #000000 solid;}
+h1 {font-size: x-large;font-style: italic;color: white;background-color: #400080;width: 100%;text-align: center;border: medium outset;}
+table {width: 100%;}
+th {font-weight: bold;font-size: medium;background-image: url("metal_bgd.gif");background-repeat: repeat-x;color: #000080;}
+th a {text-decoration: none;color: black;}
+th a:link {text-decoration: none;color: black;}
+th a:visited {text-decoration: none;color: black;}
+th a:hover {text-decoration: none;color: navy;background-color: #e1e1ff;}
+td {padding: 0 1em 0 1em;}
+.pagernav {padding: 5px;width: 100%;text-align: center;}
+.psize {padding: 5px;width: 100%;text-align: center;}

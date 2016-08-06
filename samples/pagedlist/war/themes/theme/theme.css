@@ -1,0 +1,15 @@
+body {font-family: Verdana, Helvetica, Arial, sans-serif;}
+img {border: none;}
+ul {display: block;}
+li {display: inline;padding: 5px;}
+li a:hover{background-color: #008000;}
+h1 {font-size: x-large;font-style: italic;color: white;background-color: #8080ff;width: 100%;text-align: center;}
+table {width: 100%;}
+th {font-weight: bold;font-size: medium;color: white;background-color: #0000ff;}
+th a {text-decoration: none;color: white;}
+th a:link {text-decoration: none;color: white;}
+th a:visited {text-decoration: none;color: white;}
+th a:hover {text-decoration: none;color: navy;background-color: #e1e1ff;}
+td {padding: 0 1em 0 1em;}
+.pagernav {}
+.psize {float: right;}

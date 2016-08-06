@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD//EN"
+ "http://hibernate.sourceforge.net/hibernate-configuration-2.0.dtd">
+
+<!--
+  - Sample Hibernate configuration file.
+  -->
+
+<hibernate-configuration>
+
+	<session-factory>
+
+		<!-- Reference to JNDI DataSource -->
+		<property name="connection.datasource">java:comp/env/myds</property>
+
+		<!-- General settings -->
+		<property name="dialect">net.sf.hibernate.dialect.MySQLDialect</property>
+		<property name="show_sql">true</property>
+		<property name="use_outer_join">true</property>
+
+		<!-- Reference to sample mapping file -->
+		<mapping resource="example.hbm.xml"/>
+
+	</session-factory>
+
+</hibernate-configuration>

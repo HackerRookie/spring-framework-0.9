@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<!-- ===========================================================-->
+<!-- SERVLET PAGEDLIST										    -->
+<!-- ===========================================================-->
+<beans>
+	<!-- ===========================================================-->
+	<!-- Message source												-->
+	<!-- ===========================================================-->
+	<bean id="messageSource" class="com.interface21.context.support.ResourceBundleMessageSource">
+		<property name="basename"><value>pagedlist</value></property>
+	</bean>
+
+	<!-- ===========================================================-->
+	<!-- Locale resolver. 											-->
+	<!-- ===========================================================-->
+	<bean id="localeResolver" class="com.interface21.web.servlet.i18n.CookieLocaleResolver"/>
+
+	<!-- ===========================================================-->
+	<!-- Theme resolver. 											-->
+	<!-- ===========================================================-->
+	<bean id="themeResolver" class="com.interface21.web.servlet.theme.CookieThemeResolver"/>
+
+	<!-- ===========================================================-->
+	<!-- View resolver. Required by web framework.					-->
+	<!-- ===========================================================-->
+	<bean id="viewResolver" class="com.interface21.web.servlet.view.ResourceBundleViewResolver">
+		<property name="cache"><value>true</value></property>
+		<property name="basename"><value>pagedlistViews</value></property>
+	</bean>
+	
+	<!-- ===========================================================-->
+	<!-- Application DAOs											-->
+	<!-- ===========================================================-->
+	<bean id="daoCountry" class="com.interface21.samples.pagedlist.dao.DaoCountryMem"
+		singleton="true"/>
+
+	<!-- ===========================================================-->
+	<!-- Interceptors												-->
+	<!-- ===========================================================-->
+	<bean id="localeChangeInterceptor" 
+		class="com.interface21.web.servlet.i18n.LocaleChangeInterceptor"/>
+	<bean id="themeChangeInterceptor" 
+		class="com.interface21.web.servlet.theme.ThemeChangeInterceptor"/>
+
+	<!-- ===========================================================-->
+	<!-- URL Mapping												-->
+	<!-- ===========================================================-->
+	<bean id="urlMap" class="com.interface21.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="interceptors">
+			<list>
+				<ref bean="localeChangeInterceptor"/>
+				<ref bean="themeChangeInterceptor"/>
+			</list>
+		</property>
+		<property name="mappings">
+			<props>
+				<prop key="/welcome.html">pagedListController</prop>
+				<prop key="/detail.html">pagedListController</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="methodNameResolver" class="com.interface21.web.servlet.mvc.multiaction.PropertiesMethodNameResolver">
+		<property name="mappings">
+			<props>
+				<prop key="/welcome.html">showMain</prop>
+				<prop key="/detail.html">showDetail</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="pagedListController" class="com.interface21.samples.pagedlist.web.PagedListController">
+		<property name="methodNameResolver"><ref bean="methodNameResolver"/></property>
+		<property name="daoCountry"><ref bean="daoCountry"/></property>
+	</bean>
+
+</beans>
